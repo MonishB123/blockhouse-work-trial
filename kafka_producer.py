@@ -10,11 +10,11 @@ def create_snapshots(csv_file, start_time, end_time):
     #convert df timestamps into datetime objects
     df['timestamp'] = pd.to_datetime(df['ts_event'])
     #parse df into specified time frames
-    df = df[df['timestamp'] >= pd.Timestamp(start_time)]
-    df = df[df['timestamp'] <= pd.Timestamp(end_time)]
+    df = df[df['timestamp'] >= pd.to_datetime(start_time).tz_localize('UTC')]
+    df = df[df['timestamp'] <= pd.to_datetime(end_time).tz_localize('UTC')]
     snapshots = {}
 
-    #
+    #populate snapshot dictionary with corresponding timestamp data for each unique timestamp
     for ts, group in df.groupby("timestamp"):
         current_time_venues = []
         for i, row in group.iterrows():
@@ -33,7 +33,7 @@ def create_snapshots(csv_file, start_time, end_time):
         venue_snapshots.append({'timestamp' : ts, 'venues' : snapshots[ts]})
     return venue_snapshots
 
-
+#stream each snapshot into specified kafka topic
 def stream_snapshots(snapshot_list, topic, server):
     producer = KafkaProducer(bootstrap_servers=server, 
                              value_serializer = lambda v: json.dumps(v).encode('utf-8'))
@@ -41,6 +41,7 @@ def stream_snapshots(snapshot_list, topic, server):
     previous_timestamp = None
     
     for snapshot_data in snapshot_list:
+        #create payload of each snapshot in list
         current_timestamp = snapshot_data['timestamp']
         payload = {
             'timestamp' : current_timestamp.isoformat(),
@@ -50,12 +51,13 @@ def stream_snapshots(snapshot_list, topic, server):
         if previous_timestamp:
             #Calculate ts_event delta and sleep
             time_delta = (current_timestamp - previous_timestamp).total_seconds()
+            print(time_delta)
             time.sleep(time_delta)
         previous_timestamp = current_timestamp
 
-        metadata = producer.send(topic, payload).get(timeout=10)
-        print(metadata)
-
+        #stream data to kafka topic
+        producer.send(topic, payload).get(timeout=10)
+        
     if producer:
         producer.flush()
         producer.close()
