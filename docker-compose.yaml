@@ -19,3 +19,9 @@ services:
       - ALLOW_PLAINTEXT_LISTENER=yes
     depends_on:
       - zookeeper
+  producer:
+    build: .
+    command: python kafka_producer.py
+  consumer:
+    build: .
+    command: python backtest.py

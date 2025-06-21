@@ -4,6 +4,12 @@ import json
 import time
 from datetime import datetime
 
+CSV_PATH = "l1_day.csv"
+KAFKA_TOPIC = "mock_l1_stream"
+KAFKA_SERVER = "localhost:9092"
+START_TIME = "2024-08-01T13:36:32"
+END_TIME = "2024-08-01T13:45:14"
+
 #Takes in path to csv file, returns a list of dictionaries containing timestamp and venue
 def create_snapshots(csv_file, start_time, end_time):
     df = pd.read_csv(csv_file)
@@ -63,10 +69,5 @@ def stream_snapshots(snapshot_list, topic, server):
         producer.close()
 
 if __name__ == "__main__":
-    CSV_PATH = "l1_day.csv"
-    KAFKA_TOPIC = "mock_l1_stream"
-    KAFKA_SERVER = "localhost:9092"
-    START_TIME = "2024-08-01T13:36:32"
-    END_TIME = "2024-08-01T13:45:14"
     snapshots_list = create_snapshots(CSV_PATH, START_TIME, END_TIME)
     stream_snapshots(snapshots_list, KAFKA_TOPIC, KAFKA_SERVER)
