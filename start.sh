@@ -1,5 +1,5 @@
 #!/bin/bash
 
-trap "docker-compose down" EXIT
+trap "docker-compose down -v" EXIT
 
 docker-compose up --build

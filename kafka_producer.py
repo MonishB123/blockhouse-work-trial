@@ -46,26 +46,21 @@ def stream_snapshots(snapshot_list, topic, server):
 
     previous_timestamp = None
     
-    for snapshot_data in snapshot_list:
+    for i in range(0, len(snapshot_list)):
         #create payload of each snapshot in list
-        current_timestamp = snapshot_data['timestamp']
+        current_timestamp = snapshot_list[i]['timestamp']
         payload = {
             'timestamp' : current_timestamp.isoformat(),
-            'venues' : snapshot_data['venues']
+            'venues' : snapshot_list[i]['venues'],
         }
-
         if previous_timestamp:
             #Calculate ts_event delta and sleep
             time_delta = (current_timestamp - previous_timestamp).total_seconds()
-            time.sleep(time_delta)
+            #time.sleep(time_delta)
         previous_timestamp = current_timestamp
 
         #stream data to kafka topic
-        producer.send(topic, payload).get(timeout=10)
-        
-    if producer:
-        producer.flush()
-        producer.close()
+        producer.send(topic, key=b'l1_stream_batch', value=payload).get(timeout=10)
 
 if __name__ == "__main__":
     snapshots_list = create_snapshots(CSV_PATH, START_TIME, END_TIME)
