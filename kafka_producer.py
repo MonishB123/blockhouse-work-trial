@@ -1,12 +1,12 @@
 import pandas as pd
-from kafka import KafkaProducer
+from kafka import KafkaProducer, KafkaAdminClient
 import json
 import time
 from datetime import datetime
 
 CSV_PATH = "l1_day.csv"
 KAFKA_TOPIC = "mock_l1_stream"
-KAFKA_SERVER = "localhost:9092"
+KAFKA_SERVER = "kafka:9092"
 START_TIME = "2024-08-01T13:36:32"
 END_TIME = "2024-08-01T13:45:14"
 
@@ -57,7 +57,6 @@ def stream_snapshots(snapshot_list, topic, server):
         if previous_timestamp:
             #Calculate ts_event delta and sleep
             time_delta = (current_timestamp - previous_timestamp).total_seconds()
-            print(time_delta)
             time.sleep(time_delta)
         previous_timestamp = current_timestamp
 
