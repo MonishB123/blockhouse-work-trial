@@ -325,6 +325,7 @@ def bayesian_optimization(run_sor_fn, snapshots, total_order, n_iter=20, init_po
 
 
 if __name__ == "__main__":
+    time.sleep(10)
     snapshots = consume_snapshots(KAFKA_TOPIC, KAFKA_SERVER)
 
     # Run parameter search

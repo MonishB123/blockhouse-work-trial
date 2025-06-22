@@ -24,8 +24,6 @@ services:
     command: python3 kafka_producer.py
     depends_on:
       - kafka
-    volumes:
-      - ./data:/app/data
   consumer:
     build: .
     command: python3 backtest.py
