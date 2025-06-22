@@ -63,7 +63,7 @@ def consume_snapshots(topic, server):
     snapshots = []
     i = 0
     while True:
-        records = consumer.poll(timeout_ms=10000)
+        records = consumer.poll(timeout_ms=20000)
 
         if not records:
             print("Timeout period reached")
