@@ -8,13 +8,13 @@ services:
       - ALLOW_ANONYMOUS_LOGIN=yes
   kafka:
     image: 'bitnami/kafka:3.6.2' # Use a version that relies on Zookeeper, e.g., 3.6.x
-    container_name: kafka-zookeeper-broker
+    container_name: kafka
     ports:
       - '9092:9092'
     environment:
       - KAFKA_BROKER_ID=1
       - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092
-      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka-zookeeper-broker:9092
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092
       - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181 # Connects to the zookeeper service
       - ALLOW_PLAINTEXT_LISTENER=yes
     depends_on:
