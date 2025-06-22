@@ -6,7 +6,6 @@ from datetime import datetime
 
 CSV_PATH = "l1_day.csv"
 KAFKA_TOPIC = "mock_l1_stream"
-KAFKA_SERVER = "kafka:9092"
 START_TIME = "2024-08-01T13:36:32"
 END_TIME = "2024-08-01T13:45:14"
 
