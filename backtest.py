@@ -7,6 +7,7 @@ from kafka import KafkaConsumer
 import sys
 
 KAFKA_TOPIC = "mock_l1_stream"
+KAFKA_SERVER = "kafka:9092"
 TOTAL_ORDERS = 5000
 INTERVAL_SECONDS = 522
 
