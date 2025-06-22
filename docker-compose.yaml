@@ -21,11 +21,13 @@ services:
       - zookeeper
   producer:
     build: .
-    command: python kafka_producer.py
+    command: python3 kafka_producer.py
     depends_on:
       - kafka
+    volumes:
+      - ./data:/app/data
   consumer:
     build: .
-    command: python backtest.py
+    command: python3 backtest.py
     depends_on:
       - kafka
